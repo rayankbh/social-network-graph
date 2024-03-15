@@ -94,3 +94,18 @@ for dataset_name, users in data.items():
         if dataset_name in 'myFollowers' or 'iDontFollowBack':
             G.add_edge(username, my_name)  # Incoming edge - They follow me
 
+# ----------------------
+# Graph Visualization
+# ----------------------
+
+node_colors = [G.nodes[node]['color'] for node in G.nodes()] 
+
+pos = nx.spring_layout(G)  
+
+node_sizes = [2000 if node == my_name else 500 for node in G.nodes()] 
+
+nx.draw(G, pos, node_color=node_colors, with_labels=True, font_size=8,
+        node_size=node_sizes, edge_color='gray', width=0.5) 
+
+#TO-DO: Add graph legend
+plt.show()
