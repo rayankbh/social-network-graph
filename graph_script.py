@@ -63,3 +63,34 @@ def categorize_user(user, is_me=False):
         user_categories[user] = category
         return category 
 
+# ----------------------
+# Graph Building 
+# ----------------------
+
+G = nx.DiGraph()
+# MAX_NODES = len(user_categories.values())
+
+# Get 'Me' node information
+my_name = input("\nWhat is your name? ")
+G.add_node(my_name, color=category_colors['Me'])
+
+# Process each dataset (with limiting)
+for dataset_name, users in data.items():
+    for user_data in users:
+        username = user_data['username']
+        # if G.number_of_nodes() >= MAX_NODES:
+        #     break  
+
+        if username not in user_categories:  # Get category if not already stored
+            category = categorize_user(username) 
+        else:
+            category = user_categories[username]  # Use stored category
+
+        G.add_node(username, color=category_colors[category]) 
+
+        # Add edges based on relationships
+        if dataset_name in 'imFollowing' or 'myFollowers':
+            G.add_edge(my_name, username)  # Outgoing edge - I follow them
+        if dataset_name in 'myFollowers' or 'iDontFollowBack':
+            G.add_edge(username, my_name)  # Incoming edge - They follow me
+
